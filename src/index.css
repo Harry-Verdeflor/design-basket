@@ -1,0 +1,375 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-tray: var(--sheet);
+  --color-sheet: var(--sheet);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-stroke: var(--stroke);
+  --color-accent: var(--accent);
+  --color-danger: var(--danger);
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+/* Flat, outlined, like a sticker sheet of folders. */
+:root {
+  --paper: #f5dcc0; /* peach desk */
+  --sheet: #fffdf8; /* paper inside a folder */
+  --ink: #1b1b1b;
+  --muted: #6a5d4e;
+  --line: #e2cfb8;
+  --stroke: #1b1b1b; /* every outline */
+  --accent: #1f6fb2;
+  --danger: #c62828;
+  --on-tab: #1b1b1b; /* text on bright tab colors */
+  --tab-dim: 0%;
+  --bw: 3px; /* outline width */
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper: #1d1a17;
+    --sheet: #2a2622;
+    --ink: #f3ede4;
+    --muted: #b3a795;
+    --line: #453e36;
+    --stroke: #e9e1d4;
+    --accent: #7cc0f5;
+    --danger: #ff8a80;
+    --tab-dim: 22%;
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --paper: #1d1a17;
+  --sheet: #2a2622;
+  --ink: #f3ede4;
+  --muted: #b3a795;
+  --line: #453e36;
+  --stroke: #e9e1d4;
+  --accent: #7cc0f5;
+  --danger: #ff8a80;
+  --tab-dim: 22%;
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* A basket color, dimmed a little in dark mode. Set --tab on the element. */
+.tabcolor {
+  background: color-mix(in srgb, var(--tab) calc(100% - var(--tab-dim)), #000);
+  color: var(--on-tab);
+}
+
+/* ---------- Folder (stack view) ---------- */
+.stack {
+  --dx: 1.4rem;
+  --dy: 3.1rem;
+  position: relative;
+  /* room for the two folders peeking out behind, plus the front tab */
+  padding-top: calc(var(--dy) * 2 + 3.4rem);
+  padding-left: calc(var(--dx) * 2);
+}
+@media (max-width: 640px) {
+  .stack {
+    --dx: 0.45rem;
+    --dy: 2.4rem;
+  }
+  .folder {
+    padding: 0.6rem;
+  }
+  .folder-tab {
+    font-size: 1.05rem;
+  }
+}
+.folder {
+  position: relative;
+  border: var(--bw) solid var(--stroke);
+  border-radius: 6px 18px 18px 18px;
+  padding: 1rem;
+}
+.folder-tab {
+  position: absolute;
+  bottom: calc(100% - var(--bw));
+  left: calc(var(--bw) * -1);
+  min-width: 42%;
+  max-width: 80%;
+  padding: 0.55rem 1.2rem 0.45rem;
+  border: var(--bw) solid var(--stroke);
+  border-bottom: 0;
+  border-radius: 14px 14px 0 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+/* the diagonal step where the tab meets the folder's top edge */
+.folder-tab::after {
+  content: '';
+  position: absolute;
+  right: -14px;
+  bottom: 0;
+  width: 14px;
+  height: 14px;
+}
+/* a white sheet of paper sticking out of the folder, right of the tab */
+.folder-paper {
+  position: absolute;
+  bottom: calc(100% - 4px);
+  left: 44%;
+  right: 16px;
+  height: 14px;
+  background: var(--sheet);
+  border: var(--bw) solid var(--stroke);
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+}
+.folder-back {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.folder-back .folder {
+  height: 100%;
+}
+.folder-back .folder-tab {
+  pointer-events: auto;
+  cursor: pointer;
+  font-size: 1rem;
+  min-width: 34%;
+}
+.sheet {
+  background: var(--sheet);
+  color: var(--ink); /* don't inherit the dark tab text */
+  border: var(--bw) solid var(--stroke);
+  border-radius: 12px;
+  padding: 1rem;
+}
+@keyframes folder-in {
+  from {
+    transform: translate(-14px, -40px);
+    opacity: 0.4;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+.folder-enter {
+  animation: folder-in 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Folder index strip */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.tabstrip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 2px solid var(--stroke);
+  border-bottom-width: 0;
+  border-radius: 10px 10px 0 0;
+  padding: 0.3rem 0.7rem 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transform: translateY(6px);
+}
+.tabstrip-btn[aria-selected='true'] {
+  transform: none;
+  padding-bottom: 0.6rem;
+}
+.tabstrip-btn[data-status='done'] {
+  filter: saturate(0.55);
+}
+.tabstrip-btn[data-status='skipped'] {
+  background: var(--sheet) !important;
+  color: var(--muted) !important;
+  border-style: dashed;
+}
+
+/* ---------- Tray (overview grid) ---------- */
+.tray {
+  position: relative;
+  background: var(--sheet);
+  border: var(--bw) solid var(--stroke);
+  border-radius: 6px 14px 14px 14px;
+  padding: 2.5rem 0.75rem 0.75rem;
+  margin-top: 1.9rem;
+  scroll-margin-top: 7rem;
+}
+.tray-tab {
+  position: absolute;
+  bottom: calc(100% - var(--bw));
+  left: calc(var(--bw) * -1);
+  max-width: 85%;
+  padding: 0.3rem 0.9rem 0.25rem;
+  border: var(--bw) solid var(--stroke);
+  border-bottom: 0;
+  border-radius: 10px 10px 0 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.02rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+.tray-band {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1.9rem;
+  border-bottom: var(--bw) solid var(--stroke);
+  border-radius: 3px 11px 0 0;
+}
+
+/* The one motion flourish: a drop target lifts and tints while something is dragged over it. */
+.tray[data-over='true'],
+.folder[data-over='true'] .sheet,
+.tabstrip-btn[data-over='true'] {
+  transform: translateY(-4px);
+  box-shadow: 5px 5px 0 var(--stroke);
+  background: color-mix(in srgb, var(--tab) 18%, var(--sheet));
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .folder-enter {
+    animation: none;
+  }
+  .tray[data-over='true'],
+  .folder[data-over='true'] .sheet,
+  .tabstrip-btn[data-over='true'] {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- Items ---------- */
+.item {
+  position: relative;
+  background: var(--sheet);
+  border: 2px solid var(--stroke);
+  border-radius: 10px;
+  padding: 0.5rem;
+  cursor: grab;
+  text-align: left;
+  width: 100%;
+  min-width: 0;
+}
+.item[data-priority='rule'] {
+  border-width: 3px;
+  box-shadow: 3px 3px 0 var(--stroke);
+}
+.item[data-priority='avoid'] {
+  border: 3px dashed var(--danger);
+}
+/* room for the RULE / AVOID badge so it never covers the content */
+.item[data-priority='rule'],
+.item[data-priority='avoid'] {
+  padding-top: 1.75rem;
+}
+.item[data-priority='avoid'] .item-body {
+  opacity: 0.75;
+}
+.badge {
+  display: inline-block;
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+}
+.badge-rule {
+  background: var(--ink);
+  color: var(--sheet);
+}
+.badge-avoid {
+  background: var(--danger);
+  color: #fff;
+  text-decoration: line-through;
+}
+
+/* ---------- Controls ---------- */
+.btn {
+  border: 2px solid var(--stroke);
+  background: var(--sheet);
+  color: var(--ink);
+  border-radius: 10px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.btn:hover:not(:disabled) {
+  box-shadow: 2px 2px 0 var(--stroke);
+}
+.btn:active:not(:disabled) {
+  box-shadow: none;
+  transform: translate(1px, 1px);
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn-primary {
+  background: var(--ink);
+  color: var(--sheet);
+  font-weight: 600;
+}
+.btn-danger {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+.field {
+  width: 100%;
+  background: var(--sheet);
+  border: 2px solid var(--stroke);
+  border-radius: 10px;
+  padding: 0.4rem 0.6rem;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9rem;
+}
+.label {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 0.9rem 0 0.3rem;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

@@ -1,0 +1,9 @@
+I've added a design pack in ./design-pack/. Before writing any UI code:
+1. Read design-pack/DESIGN.md fully.
+2. Open every image in design-pack/references/ that DESIGN.md mentions.
+3. Import design-pack/tokens.css (or map design-tokens.json into the project's theme config).
+4. Summarize back to me in 5–8 bullets the design rules you will follow, then wait for my OK.
+
+Follow every RULE exactly, treat INSPIRATION as the intended feel, and never use anything on the AVOID list. For anything under "Open questions", choose something consistent with Overall Direction and tell me what you chose.
+
+What to build: A one-page website for a neighborhood coffee shop: menu, opening hours, and pickup pre-orders.

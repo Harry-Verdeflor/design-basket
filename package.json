@@ -1,0 +1,57 @@
+{
+  "name": "design-basket",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Collect design references in folders and export a design pack (brief, tokens, images) that Claude Code can follow.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Harry-Verdeflor/design-basket.git"
+  },
+  "keywords": [
+    "design",
+    "design-tokens",
+    "moodboard",
+    "claude",
+    "claude-code",
+    "react",
+    "indexeddb"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "test": "vitest run",
+    "screenshots": "node scripts/screenshots.mjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.129.0",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "dexie": "^4.4.6",
+    "jszip": "^3.10.2",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "fake-indexeddb": "^6.2.5",
+    "jsdom": "^29.1.1",
+    "oxlint": "^1.81.0",
+    "puppeteer-core": "^25.12.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.3"
+  },
+  "engines": {
+    "node": ">=22.12"
+  }
+}
